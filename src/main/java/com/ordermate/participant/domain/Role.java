@@ -1,4 +1,5 @@
 package com.ordermate.participant.domain;
 
-public class Participant {
+public enum Role {
+    HOST, GUEST
 }

@@ -1,4 +1,4 @@
 package com.ordermate.participant.repository;
 
-public class ParticipantRepository {
+public class ParticipationRepository {
 }

@@ -1,4 +1,4 @@
 package com.ordermate.participant.controller;
 
-public class ParticipantController {
+public class ParticipationController {
 }
