@@ -1,6 +1,7 @@
 package com.ordermate.post.domain;
 
 import com.ordermate.comment.domain.Comment;
+import com.ordermate.comment.service.dto.FindAllByPostDto;
 import com.ordermate.member.domain.Member;
 import com.ordermate.participant.domain.Participation;
 import com.ordermate.participant.domain.Role;
@@ -25,7 +26,7 @@ public class Post {
     @Column(name = "post_id")
     private Long id;
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Participation> participationList = new ArrayList<>();
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -108,6 +109,12 @@ public class Post {
         }
 
         postStatus = postStatus.next();
+    }
+
+    public Role getParticipationMemberRole(Member member) {
+        Participation participation = findParticipationByMember(member);
+
+        return participation.getRole();
     }
 
 
