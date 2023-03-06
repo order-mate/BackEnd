@@ -37,10 +37,10 @@ public class PostController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @GetMapping("/post")
-    public ResponseEntity<?> list(
-            HttpServletRequest request
-    ) {
-        postService.
-    }
+//    @GetMapping("/post")
+//    public ResponseEntity<?> list(
+//            HttpServletRequest request
+//    ) {
+//        postService.
+//    }
 }
