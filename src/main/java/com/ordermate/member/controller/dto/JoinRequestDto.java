@@ -3,7 +3,7 @@ package com.ordermate.member.controller.dto;
 import com.ordermate.member.domain.GenderType;
 import com.ordermate.member.service.dto.JoinMemberDto;
 
-public record JoinRequest(
+public record JoinRequestDto(
         String username,
         String password,
         String name,

@@ -6,15 +6,19 @@ import com.ordermate.participant.domain.Participation;
 import com.ordermate.participant.domain.Role;
 import com.ordermate.post.exception.PostException;
 import com.ordermate.post.exception.PostExceptionType;
-import com.ordermate.post.service.PostUpdateDto;
+import com.ordermate.post.service.dto.PostUpdateDto;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.ordermate.post.domain.PostStatus.*;
+import static com.ordermate.post.domain.PostStatus.END_OF_ROOM;
+import static com.ordermate.post.domain.PostStatus.RECRUITING;
 
 @Entity
 @Getter
@@ -25,7 +29,7 @@ public class Post {
     @Column(name = "post_id")
     private Long id;
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Participation> participationList = new ArrayList<>();
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -73,9 +77,10 @@ public class Post {
         this.currentPeopleNum = 1;
     }
 
+
     public void addGuest(Member member) {
         if (postStatus != RECRUITING) {
-            throw new RuntimeException("모집중이지 않은 post에 가입요청");
+            throw new PostException(PostExceptionType.NO_AUTHORITY_JOIN);
         }
         if (currentPeopleNum >= maxPeopleNum){
             throw new RuntimeException("최대멤버 초과");
@@ -87,7 +92,7 @@ public class Post {
         Participation participation = findParticipationByMember(member);
 
         if (participation.getRole() == Role.HOST) {
-            throw new RuntimeException("방장이라면 방을 나가는게 아니라 방을 종료 해야함");
+            throw new RuntimeException("    ₩₩  방장이라면 방을 나가는게 아니라 방을 종료 해야함");
         }
 
         participationList.remove(participation);
@@ -108,6 +113,12 @@ public class Post {
         }
 
         postStatus = postStatus.next();
+    }
+
+    public Role getParticipationMemberRole(Member member) {
+        Participation participation = findParticipationByMember(member);
+
+        return participation.getRole();
     }
 
 

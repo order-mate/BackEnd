@@ -1,8 +1,9 @@
 package com.ordermate.member.controller;
 
 import com.ordermate.SessionConst;
-import com.ordermate.member.controller.dto.JoinRequest;
-import com.ordermate.member.controller.dto.LoginRequest;
+import com.ordermate.member.controller.dto.JoinRequestDto;
+import com.ordermate.member.controller.dto.LoginRequestDto;
+import com.ordermate.member.domain.Member;
 import com.ordermate.member.service.MemberService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -23,11 +24,13 @@ public class MemberController {
     private final MemberService memberService;
 
     @GetMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest, HttpServletRequest request) {
-        memberService.login(loginRequest.toServiceDto());
+    public ResponseEntity<?> login(@RequestBody LoginRequestDto loginRequestDto, HttpServletRequest request) {
+        Member member = memberService.login(loginRequestDto.toServiceDto());
 
         HttpSession session = request.getSession();
-        session.setAttribute(SessionConst.LOGIN_MEMBER, session);
+
+        session.setAttribute(SessionConst.LOGIN_MEMBER, member);
+        log.info("sessionId: {}, member: {}", session.getId(), session.getAttribute(SessionConst.LOGIN_MEMBER));
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -39,14 +42,13 @@ public class MemberController {
         if (session != null) {
             session.invalidate();
         }
-
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping("/join")
-    public ResponseEntity<?> join(@RequestBody JoinRequest joinRequest) {
+    public ResponseEntity<?> join(@RequestBody JoinRequestDto joinRequestDto) {
 
-        memberService.join(joinRequest.toServiceDto());
+        memberService.join(joinRequestDto.toServiceDto());
 
         return new ResponseEntity<>(HttpStatus.CREATED);
     }

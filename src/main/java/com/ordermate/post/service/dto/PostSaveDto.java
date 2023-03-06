@@ -1,4 +1,4 @@
-package com.ordermate.post.service;
+package com.ordermate.post.service.dto;
 
 import com.ordermate.member.domain.Member;
 import com.ordermate.post.domain.Post;
@@ -11,10 +11,7 @@ import java.time.LocalDateTime;
 @Builder
 public record PostSaveDto(
         String title,
-        LocalDateTime createdAt,
-        PostStatus postStatus,
         Integer maxPeopleNum,
-        Integer currentPeopleNum,
         Boolean isAnonymous,
         SpaceType spaceType,
         String content,
@@ -25,10 +22,8 @@ public record PostSaveDto(
 ) {
 
     public Post toEntity(Member member) {
-        return Post.builder().title(title).createdAt(createdAt)
-                .postStatus(postStatus).maxPeopleNum(maxPeopleNum)
-                .isAnonymous(isAnonymous)
-                .spaceType(spaceType).content(content)
+        return Post.builder().title(title).maxPeopleNum(maxPeopleNum)
+                .isAnonymous(isAnonymous).spaceType(spaceType).content(content)
                 .withOrderLink(withOrderLink).pickupSpace(pickupSpace)
                 .accountNum(accountNum).estimatedOrderTime(estimatedOrderTime)
                 .member(member).build();

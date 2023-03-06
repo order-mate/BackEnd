@@ -27,7 +27,7 @@ class PostTest {
                 .member(host).build();
 
         // when & then
-        assertDoesNotThrow(() -> post.checkExplodeAuthority(host));
+        assertDoesNotThrow(() -> post.explode(host));
     }
 
     @Test
@@ -45,7 +45,7 @@ class PostTest {
                 .member(host).build();
 
         // when & then
-        assertThatThrownBy(() -> post.checkExplodeAuthority(other))
+        assertThatThrownBy(() -> post.explode(other))
                 .isInstanceOf(RuntimeException.class);
     }
 
@@ -66,7 +66,7 @@ class PostTest {
         post.addGuest(other);
 
         // when & then
-        assertThatThrownBy(() -> post.checkExplodeAuthority(other))
+        assertThatThrownBy(() -> post.explode(other))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 }

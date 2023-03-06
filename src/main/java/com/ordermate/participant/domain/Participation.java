@@ -4,17 +4,15 @@ import com.ordermate.member.domain.Member;
 import com.ordermate.post.domain.Post;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.extern.java.Log;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Participation {
 
-    @Id
+    @Id @GeneratedValue
     @Column(name = "participation_id")
     private Long id;
 

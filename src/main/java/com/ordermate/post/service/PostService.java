@@ -1,13 +1,18 @@
 package com.ordermate.post.service;
 
 import com.ordermate.member.domain.Member;
+import com.ordermate.member.domain.MemberRepository;
 import com.ordermate.member.exception.MemberException;
 import com.ordermate.member.exception.MemberExceptionType;
+import com.ordermate.participant.domain.Role;
 import com.ordermate.post.domain.Post;
 import com.ordermate.post.domain.PostRepository;
 import com.ordermate.post.domain.PostStatus;
 import com.ordermate.post.exception.PostException;
 import com.ordermate.post.exception.PostExceptionType;
+import com.ordermate.post.service.dto.PostDto;
+import com.ordermate.post.service.dto.PostSaveDto;
+import com.ordermate.post.service.dto.PostUpdateDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -66,6 +71,14 @@ public class PostService {
         Post post = postRepository.findById(postId).orElseThrow(() -> new PostException(PostExceptionType.NOT_FOUND));
 
         post.update(postUpdateDto, member);
+    }
+
+    public Role getRole(Member member, Post post) {
+        return post.getParticipationMemberRole(member);
+    }
+
+    public List<PostDto> getPostList() {
+
     }
 
     public void addComment() {}
