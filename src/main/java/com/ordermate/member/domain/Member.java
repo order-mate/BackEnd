@@ -1,5 +1,6 @@
 package com.ordermate.member.domain;
 
+import com.ordermate.comment.domain.Comment;
 import com.ordermate.participant.domain.Participation;
 import jakarta.persistence.*;
 import lombok.*;
@@ -17,8 +18,7 @@ public class Member {
     private Long id;
 
     @Builder
-    public Member(List<Participation> participationList, String username, String password, String name, String nickname, GenderType gender, String school, String major) {
-        this.participationList = participationList;
+    public Member(String username, String password, String name, String nickname, GenderType gender, String school, String major) {
         this.username = username;
         this.password = password;
         this.name = name;
@@ -27,9 +27,6 @@ public class Member {
         this.school = school;
         this.major = major;
     }
-
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
-    private List<Participation> participationList = new ArrayList<>();
 
     private String username;
     private String password;

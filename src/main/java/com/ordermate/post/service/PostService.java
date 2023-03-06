@@ -77,9 +77,12 @@ public class PostService {
         return post.getParticipationMemberRole(member);
     }
 
+<<<<<<< HEAD
     public List<PostDto> getPostList() {
 
     }
 
+=======
+>>>>>>> develop
     public void addComment() {}
 }
