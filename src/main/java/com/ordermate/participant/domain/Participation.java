@@ -14,7 +14,7 @@ import lombok.extern.java.Log;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Participation {
 
-    @Id
+    @Id @GeneratedValue
     @Column(name = "participation_id")
     private Long id;
 

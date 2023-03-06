@@ -1,4 +1,4 @@
-package com.ordermate.post.service;
+package com.ordermate.post.service.dto;
 
 import com.ordermate.member.domain.Member;
 import com.ordermate.post.domain.Post;

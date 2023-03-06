@@ -10,6 +10,8 @@ import com.ordermate.post.domain.PostRepository;
 import com.ordermate.post.domain.PostStatus;
 import com.ordermate.post.exception.PostException;
 import com.ordermate.post.exception.PostExceptionType;
+import com.ordermate.post.service.dto.PostSaveDto;
+import com.ordermate.post.service.dto.PostUpdateDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -73,6 +75,10 @@ public class PostService {
     public Role getRole(Member member, Post post) {
         return post.getParticipationMemberRole(member);
     }
+
+//    public List<PostDto> getPostList() {
+//
+//    }
 
     public void addComment() {}
 }

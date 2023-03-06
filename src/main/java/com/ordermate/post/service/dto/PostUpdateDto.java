@@ -1,4 +1,4 @@
-package com.ordermate.post.service;
+package com.ordermate.post.service.dto;
 
 import com.ordermate.post.domain.PostStatus;
 import com.ordermate.post.domain.SpaceType;

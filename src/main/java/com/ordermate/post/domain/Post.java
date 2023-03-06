@@ -1,13 +1,12 @@
 package com.ordermate.post.domain;
 
 import com.ordermate.comment.domain.Comment;
-import com.ordermate.comment.service.dto.FindAllByPostDto;
 import com.ordermate.member.domain.Member;
 import com.ordermate.participant.domain.Participation;
 import com.ordermate.participant.domain.Role;
 import com.ordermate.post.exception.PostException;
 import com.ordermate.post.exception.PostExceptionType;
-import com.ordermate.post.service.PostUpdateDto;
+import com.ordermate.post.service.dto.PostUpdateDto;
 import jakarta.persistence.*;
 import lombok.*;
 

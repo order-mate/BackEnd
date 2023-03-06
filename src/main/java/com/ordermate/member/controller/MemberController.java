@@ -3,6 +3,7 @@ package com.ordermate.member.controller;
 import com.ordermate.SessionConst;
 import com.ordermate.member.controller.dto.JoinRequest;
 import com.ordermate.member.controller.dto.LoginRequest;
+import com.ordermate.member.domain.Member;
 import com.ordermate.member.service.MemberService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -24,10 +25,10 @@ public class MemberController {
 
     @GetMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest, HttpServletRequest request) {
-        memberService.login(loginRequest.toServiceDto());
+        Member member = memberService.login(loginRequest.toServiceDto());
 
         HttpSession session = request.getSession();
-        session.setAttribute(SessionConst.LOGIN_MEMBER, session);
+        session.setAttribute(SessionConst.LOGIN_MEMBER, member);
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
