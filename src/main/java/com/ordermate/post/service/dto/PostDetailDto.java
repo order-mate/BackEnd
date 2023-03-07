@@ -1,26 +1,20 @@
 package com.ordermate.post.service.dto;
 
 import com.ordermate.member.domain.Member;
-import com.ordermate.member.exception.MemberException;
-import com.ordermate.member.exception.MemberExceptionType;
 import com.ordermate.participant.domain.Role;
 import com.ordermate.participant.exception.ParticipationException;
 import com.ordermate.participant.exception.ParticipationExceptionType;
 import com.ordermate.post.domain.Post;
 import com.ordermate.post.domain.PostStatus;
 import com.ordermate.post.domain.SpaceType;
-import com.ordermate.post.exception.PostException;
-import com.ordermate.post.exception.PostExceptionType;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
-public class PostDto
-{
-    private Long postId;
+public class PostDetailDto {
+    private String ownerName;
     private String title;
     private LocalDateTime createdAt;
     private PostStatus postStatus;
@@ -33,11 +27,10 @@ public class PostDto
     private SpaceType spaceType;
     private String accountNum;
     private LocalDateTime estimatedOrderTime;
-    private Long ownerId;
-    private String ownerName;
+    private List<PostDetailParticipationDto> participationList;
+    private List<PostDetailCommentDto> commentList;
 
-    public PostDto(Post post) {
-        this.postId = post.getId();
+    public PostDetailDto(Post post) {
         this.title = post.getTitle();
         this.createdAt = post.getCreatedAt();
         this.postStatus = post.getPostStatus();
@@ -50,10 +43,16 @@ public class PostDto
         this.spaceType = post.getSpaceType();
         this.accountNum = post.getAccountNum();
         this.estimatedOrderTime = post.getEstimatedOrderTime();
+
+        this.participationList = post.getParticipationList().stream()
+                .map(p -> new PostDetailParticipationDto(p.getRole(), p.getMember(), isAnonymous)).toList();
+
+        this.commentList = post.getCommentList().stream()
+                .map(c -> new PostDetailCommentDto(c.getContent(), c.getCreatedAt(), c.getMember(), isAnonymous)).toList();
+
         Member owner = post.getParticipationList().stream()
                 .filter(participation -> participation.getRole().equals(Role.HOST)).findAny()
                 .orElseThrow(() -> new ParticipationException(ParticipationExceptionType.NOT_FOUND)).getMember();
         this.ownerName = isAnonymous ? owner.getNickname() : owner.getName();
-        this.ownerId = owner.getId();
     }
 }

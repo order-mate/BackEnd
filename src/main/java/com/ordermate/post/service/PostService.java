@@ -10,6 +10,7 @@ import com.ordermate.post.domain.PostRepository;
 import com.ordermate.post.domain.PostStatus;
 import com.ordermate.post.exception.PostException;
 import com.ordermate.post.exception.PostExceptionType;
+import com.ordermate.post.service.dto.PostDetailDto;
 import com.ordermate.post.service.dto.PostDto;
 import com.ordermate.post.service.dto.PostSaveDto;
 import com.ordermate.post.service.dto.PostUpdateDto;
@@ -82,6 +83,12 @@ public class PostService {
     public List<PostDto> getPostList() {
 //        Member member = memberRepository.findById(memberId).orElseThrow(() -> new MemberException(MemberExceptionType.NOT_FOUND));
         return postRepository.findAll().stream().map(PostDto::new).toList();
+    }
+
+    public PostDetailDto getPost(Long postId) {
+        Post post = postRepository.findById(postId).orElseThrow(() -> new PostException(PostExceptionType.NOT_FOUND));
+
+        return new PostDetailDto(post);
     }
 
     public void addComment() {

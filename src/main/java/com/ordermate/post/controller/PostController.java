@@ -4,6 +4,7 @@ import com.ordermate.SessionConst;
 import com.ordermate.member.domain.Member;
 import com.ordermate.member.service.MemberService;
 import com.ordermate.post.controller.dto.UploadRequestDto;
+import com.ordermate.post.service.dto.PostDetailDto;
 import com.ordermate.post.service.dto.PostDto;
 import com.ordermate.post.service.dto.PostSaveDto;
 import com.ordermate.post.service.PostService;
@@ -13,10 +14,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -44,5 +42,12 @@ public class PostController {
     public ResponseEntity<?> postList() {
         List<PostDto> postList = postService.getPostList();
         return new ResponseEntity<>(postList, HttpStatus.OK);
+    }
+
+    @GetMapping("/post/{postId}")
+    public ResponseEntity<?> getPost(@PathVariable("postId") Long postId) {
+        PostDetailDto post = postService.getPost(postId);
+
+        return new ResponseEntity<>(post, HttpStatus.OK);
     }
 }
