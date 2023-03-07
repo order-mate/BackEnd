@@ -17,6 +17,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -26,28 +28,28 @@ public class PostService {
     private final MemberRepository memberRepository;
 
     public void save(Long memberId, PostSaveDto postSaveDto) {
-        Member member = memberRepository.findById(memberId).orElseThrow(()-> new MemberException(MemberExceptionType.NOT_FOUND));
+        Member member = memberRepository.findById(memberId).orElseThrow(() -> new MemberException(MemberExceptionType.NOT_FOUND));
         Post post = postSaveDto.toEntity(member);
 
         postRepository.save(post);
     }
 
     public void addGuest(Long postId, Long memberId) {
-        Member member = memberRepository.findById(memberId).orElseThrow(()-> new MemberException(MemberExceptionType.NOT_FOUND));
+        Member member = memberRepository.findById(memberId).orElseThrow(() -> new MemberException(MemberExceptionType.NOT_FOUND));
         Post post = postRepository.findById(postId).orElseThrow(() -> new PostException(PostExceptionType.NOT_FOUND));
 
         post.addGuest(member);
     }
 
     public void leave(Long postId, Long memberId) {
-        Member member = memberRepository.findById(memberId).orElseThrow(()-> new MemberException(MemberExceptionType.NOT_FOUND));
+        Member member = memberRepository.findById(memberId).orElseThrow(() -> new MemberException(MemberExceptionType.NOT_FOUND));
         Post post = postRepository.findById(postId).orElseThrow(() -> new PostException(PostExceptionType.NOT_FOUND));
-        
+
         post.leave(member);
     }
 
     public void explode(Long postId, Long memberId) {
-        Member member = memberRepository.findById(memberId).orElseThrow(()-> new MemberException(MemberExceptionType.NOT_FOUND));
+        Member member = memberRepository.findById(memberId).orElseThrow(() -> new MemberException(MemberExceptionType.NOT_FOUND));
         Post post = postRepository.findById(postId).orElseThrow(() -> new PostException(PostExceptionType.NOT_FOUND));
 
         post.explode(member);
@@ -60,14 +62,14 @@ public class PostService {
     }
 
     public void togglePostStatus(Long postId, Long memberId) {
-        Member member = memberRepository.findById(memberId).orElseThrow(()-> new MemberException(MemberExceptionType.NOT_FOUND));
+        Member member = memberRepository.findById(memberId).orElseThrow(() -> new MemberException(MemberExceptionType.NOT_FOUND));
         Post post = postRepository.findById(postId).orElseThrow(() -> new PostException(PostExceptionType.NOT_FOUND));
 
         post.togglePostStatus(member);
     }
 
     public void update(Long postId, Long memberId, PostUpdateDto postUpdateDto) {
-        Member member = memberRepository.findById(memberId).orElseThrow(()-> new MemberException(MemberExceptionType.NOT_FOUND));
+        Member member = memberRepository.findById(memberId).orElseThrow(() -> new MemberException(MemberExceptionType.NOT_FOUND));
         Post post = postRepository.findById(postId).orElseThrow(() -> new PostException(PostExceptionType.NOT_FOUND));
 
         post.update(postUpdateDto, member);
@@ -77,12 +79,11 @@ public class PostService {
         return post.getParticipationMemberRole(member);
     }
 
-<<<<<<< HEAD
     public List<PostDto> getPostList() {
-
+//        Member member = memberRepository.findById(memberId).orElseThrow(() -> new MemberException(MemberExceptionType.NOT_FOUND));
+        return postRepository.findAll().stream().map(PostDto::new).toList();
     }
 
-=======
->>>>>>> develop
-    public void addComment() {}
+    public void addComment() {
+    }
 }
