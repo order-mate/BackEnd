@@ -2,8 +2,6 @@ package com.ordermate.post.domain;
 
 import com.ordermate.comment.domain.Comment;
 import com.ordermate.member.domain.Member;
-import com.ordermate.member.exception.MemberException;
-import com.ordermate.member.exception.MemberExceptionType;
 import com.ordermate.participant.domain.Participation;
 import com.ordermate.participant.domain.Role;
 import com.ordermate.post.exception.PostException;
@@ -14,7 +12,6 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.http.HttpStatus;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;

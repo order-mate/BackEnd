@@ -2,13 +2,11 @@ package com.ordermate.post.controller;
 
 import com.ordermate.SessionConst;
 import com.ordermate.member.domain.Member;
-import com.ordermate.member.service.MemberService;
 import com.ordermate.post.controller.dto.UploadRequestDto;
+import com.ordermate.post.service.PostService;
 import com.ordermate.post.service.dto.PostDetailDto;
 import com.ordermate.post.service.dto.PostDto;
 import com.ordermate.post.service.dto.PostSaveDto;
-import com.ordermate.post.service.PostService;
-import com.sun.net.httpserver.HttpsServer;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,14 +31,14 @@ public class PostController {
         Member member= (Member) request.getSession().getAttribute(SessionConst.LOGIN_MEMBER);
 
         PostSaveDto postSaveDto = uploadRequestDto.toServiceDto();
-        postService.save(member.getId(), postSaveDto);
+        postService.savePost(member.getId(), postSaveDto);
 
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @GetMapping("/post")
     public ResponseEntity<?> postList() {
-        List<PostDto> postList = postService.getPostList();
+        List<PostDto> postList = postService.getAllPost();
         return new ResponseEntity<>(postList, HttpStatus.OK);
     }
 
