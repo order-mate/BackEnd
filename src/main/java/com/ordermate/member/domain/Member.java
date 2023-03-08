@@ -1,12 +1,7 @@
 package com.ordermate.member.domain;
 
-import com.ordermate.comment.domain.Comment;
-import com.ordermate.participant.domain.Participation;
 import jakarta.persistence.*;
 import lombok.*;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Getter

@@ -73,7 +73,7 @@ public class PostService {
         Member member = memberRepository.findById(memberId).orElseThrow(() -> new MemberException(MemberExceptionType.NOT_FOUND));
         Post post = postRepository.findById(postId).orElseThrow(() -> new PostException(PostExceptionType.NOT_FOUND));
 
-        post.update(postUpdateDto, member);
+        post.update(postUpdateDto, member );
     }
 
     public Role getRole(Member member, Post post) {

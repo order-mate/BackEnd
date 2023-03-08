@@ -2,6 +2,8 @@ package com.ordermate.post.domain;
 
 import com.ordermate.comment.domain.Comment;
 import com.ordermate.member.domain.Member;
+import com.ordermate.member.exception.MemberException;
+import com.ordermate.member.exception.MemberExceptionType;
 import com.ordermate.participant.domain.Participation;
 import com.ordermate.participant.domain.Role;
 import com.ordermate.post.exception.PostException;
@@ -12,6 +14,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.http.HttpStatus;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -83,7 +86,7 @@ public class Post {
             throw new PostException(PostExceptionType.NO_AUTHORITY_JOIN);
         }
         if (currentPeopleNum >= maxPeopleNum){
-            throw new RuntimeException("최대멤버 초과");
+            throw new PostException(PostExceptionType.EXCESS_MAX_PEOPLE_NUM);
         }
         participationList.add(new Participation(member, this, Role.GUEST));
     }
@@ -92,7 +95,8 @@ public class Post {
         Participation participation = findParticipationByMember(member);
 
         if (participation.getRole() == Role.HOST) {
-            throw new RuntimeException("    ₩₩  방장이라면 방을 나가는게 아니라 방을 종료 해야함");
+            // Todo 이 로직이 맞는지 얘기해야함.
+            throw new RuntimeException("방장이라면 방을 나가는게 아니라 방을 종료 해야함");
         }
 
         participationList.remove(participation);
@@ -136,9 +140,11 @@ public class Post {
         Participation participation = findParticipationByMember(member);
 
         if (participation.getRole() != Role.HOST) {
-            throw new IllegalArgumentException("호스트만 방 상태를 변경할 수 있음");
+            throw new PostException(PostExceptionType.NO_AUTHORITY_UPDATE);
         }
-
+        if (currentPeopleNum > postUpdateDto.maxPeopleNum()) {
+            throw new PostException(PostExceptionType.EXCESS_MAX_PEOPLE_NUM);
+        }
         title = postUpdateDto.title();
         isAnonymous = postUpdateDto.isAnonymous();
         content = postUpdateDto.content();
