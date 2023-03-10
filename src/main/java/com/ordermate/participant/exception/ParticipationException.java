@@ -16,3 +16,4 @@ public class ParticipationException extends BaseException {
         return this.participationExceptionType;
     }
 }
+
