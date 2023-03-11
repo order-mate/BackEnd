@@ -81,6 +81,10 @@ public class PostService {
         return post.getParticipationMemberRole(member);
     }
 
+//    public List<PostDto> getPostList() {
+//
+//    }
+
     public List<PostDto> getAllPost() {
 //        Member member = memberRepository.findById(memberId).orElseThrow(() -> new MemberException(MemberExceptionType.NOT_FOUND));
         return postRepository.findAll().stream().map(PostDto::new).toList();

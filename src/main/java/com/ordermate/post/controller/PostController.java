@@ -49,3 +49,11 @@ public class PostController {
         return new ResponseEntity<>(post, HttpStatus.OK);
     }
 }
+
+//    @GetMapping("/post")
+//    public ResponseEntity<?> list(
+//            HttpServletRequest request
+//    ) {
+//        postService.
+//    }
+}

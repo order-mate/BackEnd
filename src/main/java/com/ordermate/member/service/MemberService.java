@@ -33,7 +33,7 @@ public class MemberService {
     public Member login(LoginMemberDto loginMemberDto) {
         Optional<Member> username = memberRepository.findByUsername(loginMemberDto.getUsername());
 
-        Member member = username.filter(m -> m.getPassword()
+        return username.filter(m -> m.getPassword()
                         .equals(loginMemberDto.getPassword()))
                 .orElseThrow(() -> new MemberException(NOT_FOUND));
 
