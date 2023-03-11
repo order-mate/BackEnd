@@ -5,6 +5,9 @@ import com.ordermate.member.controller.dto.JoinRequestDto;
 import com.ordermate.member.controller.dto.LoginRequestDto;
 import com.ordermate.member.domain.Member;
 import com.ordermate.member.service.MemberService;
+import com.ordermate.post.controller.dto.UploadRequestDto;
+import com.ordermate.post.service.PostService;
+import com.ordermate.post.service.dto.PostDto;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -16,12 +19,15 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @Slf4j
 @RestController
 @RequiredArgsConstructor
 public class MemberController {
 
     private final MemberService memberService;
+    private final PostService postService;
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequestDto loginRequestDto, HttpServletRequest request) {
@@ -51,5 +57,15 @@ public class MemberController {
         memberService.join(joinRequestDto.toServiceDto());
 
         return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @GetMapping("/user/post-list")
+    public ResponseEntity<?> getParticipatedPostList(
+            HttpServletRequest request
+    ) {
+        Member member= (Member) request.getSession().getAttribute(SessionConst.LOGIN_MEMBER);
+        List<PostDto> allParticipatedPost = postService.getAllParticipatedPost(member.getId());
+
+        return new ResponseEntity<>(allParticipatedPost, HttpStatus.OK);
     }
 }

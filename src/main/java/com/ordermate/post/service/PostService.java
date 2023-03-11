@@ -49,8 +49,6 @@ public class PostService {
         post.leave(member);
     }
 
-
-
     public void explodePost(Long postId, Long memberId) {
         Member member = findMember(memberId);
         Post post = findPost(postId);
@@ -85,8 +83,8 @@ public class PostService {
 //
 //    }
 
+    // Todo 필터 기능 추가
     public List<PostDto> getAllPost() {
-//        Member member = memberRepository.findById(memberId).orElseThrow(() -> new MemberException(MemberExceptionType.NOT_FOUND));
         return postRepository.findAll().stream().map(PostDto::new).toList();
     }
 
@@ -94,6 +92,11 @@ public class PostService {
         Post post = findPost(postId);
 
         return new PostDetailDto(post);
+    }
+
+    public List<PostDto> getAllParticipatedPost(Long memberId) {
+        return postRepository.findAllByMemberId(memberId)
+                .stream().map(PostDto::new).toList();
     }
 
     public void addComment() {
