@@ -50,10 +50,3 @@ public class PostController {
     }
 }
 
-//    @GetMapping("/post")
-//    public ResponseEntity<?> list(
-//            HttpServletRequest request
-//    ) {
-//        postService.
-//    }
-}
