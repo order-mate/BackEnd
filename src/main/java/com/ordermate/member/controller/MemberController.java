@@ -23,7 +23,7 @@ public class MemberController {
 
     private final MemberService memberService;
 
-    @GetMapping("/login")
+    @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequestDto loginRequestDto, HttpServletRequest request) {
         Member member = memberService.login(loginRequestDto.toServiceDto());
 
