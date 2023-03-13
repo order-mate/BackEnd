@@ -1,8 +1,10 @@
 package com.ordermate.post.controller;
 
 import com.ordermate.SessionConst;
+import com.ordermate.member.domain.GenderType;
 import com.ordermate.member.domain.Member;
 import com.ordermate.post.controller.dto.UploadRequestDto;
+import com.ordermate.post.domain.SpaceType;
 import com.ordermate.post.service.PostService;
 import com.ordermate.post.service.dto.PostDetailDto;
 import com.ordermate.post.service.dto.PostDto;
@@ -37,8 +39,11 @@ public class PostController {
     }
 
     @GetMapping("/post")
-    public ResponseEntity<?> postList() {
-        List<PostDto> postList = postService.getAllPost();
+    public ResponseEntity<?> getPostList(
+            @RequestParam(defaultValue = "ALL", required = false) SpaceType spaceType,
+            @RequestParam(defaultValue = "ALL", required = false) GenderType genderType
+    ) {
+        List<PostDto> postList = postService.getAllFilteredPost(spaceType, genderType);
         return new ResponseEntity<>(postList, HttpStatus.OK);
     }
 

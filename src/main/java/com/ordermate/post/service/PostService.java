@@ -1,13 +1,18 @@
 package com.ordermate.post.service;
 
+import com.ordermate.member.domain.GenderType;
 import com.ordermate.member.domain.Member;
 import com.ordermate.member.domain.MemberRepository;
 import com.ordermate.member.exception.MemberException;
 import com.ordermate.member.exception.MemberExceptionType;
+import com.ordermate.participant.domain.Participation;
 import com.ordermate.participant.domain.Role;
+import com.ordermate.participant.exception.ParticipationException;
+import com.ordermate.participant.exception.ParticipationExceptionType;
 import com.ordermate.post.domain.Post;
 import com.ordermate.post.domain.PostRepository;
 import com.ordermate.post.domain.PostStatus;
+import com.ordermate.post.domain.SpaceType;
 import com.ordermate.post.exception.PostException;
 import com.ordermate.post.exception.PostExceptionType;
 import com.ordermate.post.service.dto.PostDetailDto;
@@ -79,13 +84,16 @@ public class PostService {
         return post.getParticipationMemberRole(member);
     }
 
-//    public List<PostDto> getPostList() {
-//
-//    }
-
-    // Todo 필터 기능 추가
-    public List<PostDto> getAllPost() {
-        return postRepository.findAll().stream().map(PostDto::new).toList();
+    public List<PostDto> getAllFilteredPost(SpaceType spaceType, GenderType genderType) {
+        return postRepository.findAll().stream()
+                .filter(p -> spaceType == SpaceType.ALL || p.getSpaceType().equals(spaceType))
+                .filter(p -> genderType == GenderType.ALL || p.getParticipationList().stream()
+                        .filter(participation -> participation.getRole() == Role.HOST)
+                        .map(Participation::getMember)
+                        .map(Member::getGender)
+                        .anyMatch(gender -> gender.equals(genderType)))
+                .map(PostDto::new)
+                .toList();
     }
 
     public PostDetailDto getPost(Long postId) {
