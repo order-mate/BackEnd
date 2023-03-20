@@ -1,7 +1,6 @@
 package com.ordermate.post.domain;
 
 import com.ordermate.member.domain.Member;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

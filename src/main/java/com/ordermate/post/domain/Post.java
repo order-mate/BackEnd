@@ -4,8 +4,10 @@ import com.ordermate.comment.domain.Comment;
 import com.ordermate.member.domain.Member;
 import com.ordermate.participant.domain.Participation;
 import com.ordermate.participant.domain.Role;
+import com.ordermate.post.controller.dto.DirectionType;
 import com.ordermate.post.exception.PostException;
 import com.ordermate.post.exception.PostExceptionType;
+import com.ordermate.post.service.dto.PostStatusDto;
 import com.ordermate.post.service.dto.PostUpdateDto;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -17,8 +19,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.ordermate.post.domain.PostStatus.END_OF_ROOM;
-import static com.ordermate.post.domain.PostStatus.RECRUITING;
+import static com.ordermate.post.domain.PostStatus.*;
 
 @Entity
 @Getter
@@ -106,14 +107,17 @@ public class Post {
                 .findAny().orElseThrow(() -> new PostException(PostExceptionType.NOT_FOUND));
     }
 
-    public void togglePostStatus(Member member) {
+    public PostStatusDto togglePostStatus(Member member, DirectionType directionType, PostStatus currentStatus) {
         Participation participation = findParticipationByMember(member);
 
         if (participation.getRole() != Role.HOST) {
-            throw new PostException(PostExceptionType.NO_AUTHORITY_POST_TOGGLE);
+            throw new PostException(PostExceptionType.NO_AUTHORITY_STATUS_TOGGLE);
         }
 
-        postStatus = postStatus.next();
+        postStatus = directionType == DirectionType.NEXT ?
+                next(currentStatus) : prev(currentStatus);
+
+        return new PostStatusDto(postStatus);
     }
 
     public Role getParticipationMemberRole(Member member) {

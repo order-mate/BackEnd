@@ -4,6 +4,8 @@ import com.ordermate.post.domain.PostStatus;
 import com.ordermate.post.domain.SpaceType;
 import lombok.Builder;
 
+import java.time.LocalDateTime;
+
 @Builder
 public record PostUpdateDto(
         String title,
@@ -14,6 +16,7 @@ public record PostUpdateDto(
         String content,
         String withOrderLink,
         String pickupSpace,
-        String accountNum
+        String accountNum,
+        LocalDateTime estimatedOrderTime
 ) {
 }

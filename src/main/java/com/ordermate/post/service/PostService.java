@@ -7,18 +7,14 @@ import com.ordermate.member.exception.MemberException;
 import com.ordermate.member.exception.MemberExceptionType;
 import com.ordermate.participant.domain.Participation;
 import com.ordermate.participant.domain.Role;
-import com.ordermate.participant.exception.ParticipationException;
-import com.ordermate.participant.exception.ParticipationExceptionType;
+import com.ordermate.post.controller.dto.DirectionType;
 import com.ordermate.post.domain.Post;
 import com.ordermate.post.domain.PostRepository;
 import com.ordermate.post.domain.PostStatus;
 import com.ordermate.post.domain.SpaceType;
 import com.ordermate.post.exception.PostException;
 import com.ordermate.post.exception.PostExceptionType;
-import com.ordermate.post.service.dto.PostDetailDto;
-import com.ordermate.post.service.dto.PostDto;
-import com.ordermate.post.service.dto.PostSaveDto;
-import com.ordermate.post.service.dto.PostUpdateDto;
+import com.ordermate.post.service.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -54,6 +50,17 @@ public class PostService {
         post.leave(member);
     }
 
+    public void deletePost(Long postId, Long memberId) {
+        Member member = findMember(memberId);
+        Post post = findPost(postId);
+
+        if(!getRole(member, post).equals(Role.HOST)) {
+            throw new PostException(PostExceptionType.NO_AUTHORITY_DELETE);
+        }
+
+        postRepository.delete(post);
+    }
+
     public void explodePost(Long postId, Long memberId) {
         Member member = findMember(memberId);
         Post post = findPost(postId);
@@ -66,11 +73,11 @@ public class PostService {
         return post.getPostStatus();
     }
 
-    public void togglePostStatus(Long postId, Long memberId) {
+    public PostStatusDto togglePostStatus(Long postId, Long memberId, DirectionType directionType, PostStatus currentStatus) {
         Member member = findMember(memberId);
         Post post = findPost(postId);
 
-        post.togglePostStatus(member);
+        return post.togglePostStatus(member, directionType, currentStatus);
     }
 
     public void updatePost(Long postId, Long memberId, PostUpdateDto postUpdateDto) {
