@@ -93,9 +93,10 @@ public class PostController {
         DirectionType directionType = changeStatusRequestDto.directionType();
         PostStatus currentStatus = changeStatusRequestDto.currentStatus();
 
-        PostStatusDto postStatusDto = postService.togglePostStatus(postId, member.getId(), directionType, currentStatus);
+        postService.togglePostStatus(postId, member.getId(), directionType, currentStatus);
+        PostStatus postStatus = postService.getPostStatus(postId);
 
-        return new ResponseEntity<>(postStatusDto ,HttpStatus.CREATED);
+        return new ResponseEntity<>(new PostStatusDto(postStatus) ,HttpStatus.CREATED);
     }
 }
 

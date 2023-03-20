@@ -10,10 +10,8 @@ import com.ordermate.post.exception.PostExceptionType;
 import com.ordermate.post.service.dto.PostStatusDto;
 import com.ordermate.post.service.dto.PostUpdateDto;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -89,13 +87,8 @@ public class Post {
         participationList.add(new Participation(member, this, Role.GUEST));
     }
 
-    public void leave(Member member) {
+    public void leaveGuest(Member member) {
         Participation participation = findParticipationByMember(member);
-
-        if (participation.getRole() == Role.HOST) {
-            // Todo 이 로직이 맞는지 얘기해야함.
-            throw new RuntimeException("방장이라면 방을 나가는게 아니라 방을 종료 해야함");
-        }
 
         participationList.remove(participation);
         currentPeopleNum--;
@@ -107,7 +100,7 @@ public class Post {
                 .findAny().orElseThrow(() -> new PostException(PostExceptionType.NOT_FOUND));
     }
 
-    public PostStatusDto togglePostStatus(Member member, DirectionType directionType, PostStatus currentStatus) {
+    public void togglePostStatus(Member member, DirectionType directionType, PostStatus currentStatus) {
         Participation participation = findParticipationByMember(member);
 
         if (participation.getRole() != Role.HOST) {
@@ -116,8 +109,6 @@ public class Post {
 
         postStatus = directionType == DirectionType.NEXT ?
                 next(currentStatus) : prev(currentStatus);
-
-        return new PostStatusDto(postStatus);
     }
 
     public Role getParticipationMemberRole(Member member) {

@@ -47,14 +47,18 @@ public class PostService {
         Member member = findMember(memberId);
         Post post = findPost(postId);
 
-        post.leave(member);
+        if (getRole(member, post).equals(Role.HOST)) {
+            postRepository.delete(post);
+        } else {
+            post.leaveGuest(member);
+        }
     }
 
     public void deletePost(Long postId, Long memberId) {
         Member member = findMember(memberId);
         Post post = findPost(postId);
 
-        if(!getRole(member, post).equals(Role.HOST)) {
+        if (!getRole(member, post).equals(Role.HOST)) {
             throw new PostException(PostExceptionType.NO_AUTHORITY_DELETE);
         }
 
@@ -73,11 +77,11 @@ public class PostService {
         return post.getPostStatus();
     }
 
-    public PostStatusDto togglePostStatus(Long postId, Long memberId, DirectionType directionType, PostStatus currentStatus) {
+    public void togglePostStatus(Long postId, Long memberId, DirectionType directionType, PostStatus currentStatus) {
         Member member = findMember(memberId);
         Post post = findPost(postId);
 
-        return post.togglePostStatus(member, directionType, currentStatus);
+        post.togglePostStatus(member, directionType, currentStatus);
     }
 
     public void updatePost(Long postId, Long memberId, PostUpdateDto postUpdateDto) {
