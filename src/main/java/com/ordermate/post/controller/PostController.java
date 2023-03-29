@@ -3,10 +3,7 @@ package com.ordermate.post.controller;
 import com.ordermate.SessionConst;
 import com.ordermate.member.domain.GenderType;
 import com.ordermate.member.domain.Member;
-import com.ordermate.post.controller.dto.ChangeStatusRequestDto;
-import com.ordermate.post.controller.dto.DirectionType;
-import com.ordermate.post.controller.dto.UpdateRequestDto;
-import com.ordermate.post.controller.dto.UploadRequestDto;
+import com.ordermate.post.controller.dto.*;
 import com.ordermate.post.domain.PostStatus;
 import com.ordermate.post.domain.SpaceType;
 import com.ordermate.post.service.PostService;
@@ -97,6 +94,16 @@ public class PostController {
         PostStatus postStatus = postService.getPostStatus(postId);
 
         return new ResponseEntity<>(new PostStatusDto(postStatus) ,HttpStatus.CREATED);
+    }
+
+    @GetMapping("/post/auth")
+    public ResponseEntity<?> getAuthUploadPost(
+            HttpServletRequest request
+    ) {
+        Member member= (Member) request.getSession().getAttribute(SessionConst.LOGIN_MEMBER);
+        UploadPostAuthorityDto authUploadPost = postService.getAuthUploadPost(member.getId());
+
+        return new ResponseEntity<>(authUploadPost, HttpStatus.OK);
     }
 }
 

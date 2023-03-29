@@ -8,13 +8,17 @@ import com.ordermate.member.exception.MemberExceptionType;
 import com.ordermate.participant.domain.Participation;
 import com.ordermate.participant.domain.Role;
 import com.ordermate.post.controller.dto.DirectionType;
+import com.ordermate.post.controller.dto.UploadPostAuthorityDto;
 import com.ordermate.post.domain.Post;
 import com.ordermate.post.domain.PostRepository;
 import com.ordermate.post.domain.PostStatus;
 import com.ordermate.post.domain.SpaceType;
 import com.ordermate.post.exception.PostException;
 import com.ordermate.post.exception.PostExceptionType;
-import com.ordermate.post.service.dto.*;
+import com.ordermate.post.service.dto.PostDetailDto;
+import com.ordermate.post.service.dto.PostDto;
+import com.ordermate.post.service.dto.PostSaveDto;
+import com.ordermate.post.service.dto.PostUpdateDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -127,5 +131,12 @@ public class PostService {
 
     private Post findPost(Long postId) {
         return postRepository.findById(postId).orElseThrow(() -> new PostException(PostExceptionType.NOT_FOUND));
+    }
+
+    public UploadPostAuthorityDto getAuthUploadPost(Long memberId) {
+        List<PostDto> allParticipatedPost = getAllParticipatedPost(memberId);
+        return new UploadPostAuthorityDto(allParticipatedPost.stream()
+                .filter(p -> !p.getPostStatus().equals(PostStatus.END_OF_ROOM))
+                .findAny().isEmpty());
     }
 }
