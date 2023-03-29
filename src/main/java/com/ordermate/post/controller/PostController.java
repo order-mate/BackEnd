@@ -62,7 +62,7 @@ public class PostController {
             @RequestBody UpdateRequestDto updateRequestDto,
             HttpServletRequest request
     ) {
-        Member member= (Member) request.getSession().getAttribute(SessionConst.LOGIN_MEMBER);
+        Member member = (Member) request.getSession().getAttribute(SessionConst.LOGIN_MEMBER);
         postService.updatePost(postId, member.getId(), updateRequestDto.toServiceDto());
 
         return new ResponseEntity<>(HttpStatus.CREATED);
@@ -104,6 +104,28 @@ public class PostController {
         UploadPostAuthorityDto authUploadPost = postService.getAuthUploadPost(member.getId());
 
         return new ResponseEntity<>(authUploadPost, HttpStatus.OK);
+    }
+
+    @PostMapping("/post/{postId}/enter")
+    public ResponseEntity<?> enterPost(
+            @PathVariable Long postId,
+            HttpServletRequest request
+    ) {
+        Member member= (Member) request.getSession().getAttribute(SessionConst.LOGIN_MEMBER);
+        postService.addGuest(postId, member.getId());
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PostMapping("/post/{postId}/leave")
+    public ResponseEntity<?> leavePost(
+            @PathVariable Long postId,
+            HttpServletRequest request
+    ) {
+        Member member= (Member) request.getSession().getAttribute(SessionConst.LOGIN_MEMBER);
+        postService.leavePost(postId, member.getId());
+
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
 
