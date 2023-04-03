@@ -7,11 +7,13 @@ import com.ordermate.participant.domain.Role;
 import com.ordermate.post.controller.dto.DirectionType;
 import com.ordermate.post.exception.PostException;
 import com.ordermate.post.exception.PostExceptionType;
-import com.ordermate.post.service.dto.PostStatusDto;
 import com.ordermate.post.service.dto.PostUpdateDto;
 import jakarta.persistence.*;
-import lombok.*;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -35,10 +37,12 @@ public class Post {
     private List<Comment> commentList = new ArrayList<>();
 
     private String title;
+
+    @CreationTimestamp
     private LocalDateTime createdAt;
 
     @Enumerated(EnumType.STRING)
-    private PostStatus postStatus;
+    private PostStatus postStatus = RECRUITING;
 
     private Integer maxPeopleNum;
 
