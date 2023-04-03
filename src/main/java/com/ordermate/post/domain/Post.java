@@ -4,6 +4,8 @@ import com.ordermate.comment.domain.Comment;
 import com.ordermate.member.domain.Member;
 import com.ordermate.participant.domain.Participation;
 import com.ordermate.participant.domain.Role;
+import com.ordermate.participant.exception.ParticipationException;
+import com.ordermate.participant.exception.ParticipationExceptionType;
 import com.ordermate.post.controller.dto.DirectionType;
 import com.ordermate.post.exception.PostException;
 import com.ordermate.post.exception.PostExceptionType;
@@ -88,6 +90,8 @@ public class Post {
         if (currentPeopleNum >= maxPeopleNum){
             throw new PostException(PostExceptionType.EXCESS_MAX_PEOPLE_NUM);
         }
+
+        currentPeopleNum ++;
         participationList.add(new Participation(member, this, Role.GUEST));
     }
 
@@ -101,7 +105,7 @@ public class Post {
     private Participation findParticipationByMember(Member member) {
         return participationList.stream()
                 .filter(p -> p.getMember().equals(member))
-                .findAny().orElseThrow(() -> new PostException(PostExceptionType.NOT_FOUND));
+                .findAny().orElseThrow(() -> new ParticipationException(ParticipationExceptionType.PARTICIPATION_NOT_FOUND));
     }
 
     public void togglePostStatus(Member member, DirectionType directionType, PostStatus currentStatus) {
@@ -149,5 +153,14 @@ public class Post {
         spaceType = postUpdateDto.spaceType();
         accountNum = postUpdateDto.accountNum();
         maxPeopleNum = postUpdateDto.maxPeopleNum();
+    }
+
+    public void checkAlreadyParticipatedThisPost(Member member) {
+        boolean isAlreadyParticipatedPost = participationList.stream()
+                .anyMatch(p -> p.getMember().equals(member));
+
+        if(isAlreadyParticipatedPost) {
+            throw new ParticipationException(ParticipationExceptionType.ALREADY_PARTICIPATED_THIS_POST);
+        }
     }
 }
