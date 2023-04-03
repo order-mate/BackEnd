@@ -114,7 +114,7 @@ public class PostController {
         Member member= (Member) request.getSession().getAttribute(SessionConst.LOGIN_MEMBER);
         postService.addGuest(postId, member.getId());
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @PostMapping("/post/{postId}/leave")
@@ -125,7 +125,7 @@ public class PostController {
         Member member= (Member) request.getSession().getAttribute(SessionConst.LOGIN_MEMBER);
         postService.leavePost(postId, member.getId());
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 }
 
