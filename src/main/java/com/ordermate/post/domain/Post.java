@@ -84,6 +84,8 @@ public class Post {
 
 
     public void addGuest(Member member) {
+        checkAlreadyParticipatedThisPost(member);
+
         if (postStatus != RECRUITING) {
             throw new PostException(PostExceptionType.NO_AUTHORITY_JOIN);
         }
@@ -155,7 +157,7 @@ public class Post {
         maxPeopleNum = postUpdateDto.maxPeopleNum();
     }
 
-    public void checkAlreadyParticipatedThisPost(Member member) {
+    private void checkAlreadyParticipatedThisPost(Member member) {
         boolean isAlreadyParticipatedPost = participationList.stream()
                 .anyMatch(p -> p.getMember().equals(member));
 

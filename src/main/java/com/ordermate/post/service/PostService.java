@@ -44,13 +44,13 @@ public class PostService {
         Member member = findMember(memberId);
         Post post = findPost(postId);
 
-        post.checkAlreadyParticipatedThisPost(member);
         post.addGuest(member);
     }
 
     public void leavePost(Long postId, Long memberId) {
         Member member = findMember(memberId);
         Post post = findPost(postId);
+
         Role role = getRole(member, post);
         if (role.equals(Role.HOST)) {
             postRepository.delete(post);
