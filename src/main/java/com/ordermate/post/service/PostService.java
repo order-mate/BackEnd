@@ -77,6 +77,7 @@ public class PostService {
         post.explode(member);
     }
 
+    @Transactional(readOnly = true)
     public PostStatus getPostStatus(Long postId) {
         Post post = findPost(postId);
         return post.getPostStatus();
@@ -96,10 +97,11 @@ public class PostService {
         post.update(postUpdateDto, member);
     }
 
-    public Role getRole(Member member, Post post) {
+    private Role getRole(Member member, Post post) {
         return post.getParticipationMemberRole(member);
     }
 
+    @Transactional(readOnly = true)
     public List<PostDto> getAllFilteredPost(SpaceType spaceType, GenderType genderType) {
         return postRepository.findAll().stream()
                 .filter(p -> spaceType == SpaceType.ALL || p.getSpaceType().equals(spaceType))
@@ -112,12 +114,14 @@ public class PostService {
                 .toList();
     }
 
+    @Transactional(readOnly = true)
     public PostDetailDto getPost(Long postId) {
         Post post = findPost(postId);
 
         return new PostDetailDto(post);
     }
 
+    @Transactional(readOnly = true)
     public List<PostDto> getAllParticipatedPost(Long memberId) {
         return postRepository.findAllByMemberId(memberId)
                 .stream().map(PostDto::new).toList();
@@ -134,6 +138,7 @@ public class PostService {
         return postRepository.findById(postId).orElseThrow(() -> new PostException(PostExceptionType.NOT_FOUND));
     }
 
+    @Transactional(readOnly = true)
     public UploadPostAuthorityDto getAuthUploadPost(Long memberId) {
         List<PostDto> allParticipatedPost = getAllParticipatedPost(memberId);
         return new UploadPostAuthorityDto(allParticipatedPost.stream()
