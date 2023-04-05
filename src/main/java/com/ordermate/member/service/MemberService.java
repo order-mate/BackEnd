@@ -6,12 +6,12 @@ import com.ordermate.member.exception.MemberException;
 import com.ordermate.member.exception.MemberExceptionType;
 import com.ordermate.member.service.dto.JoinMemberDto;
 import com.ordermate.member.service.dto.LoginMemberDto;
+import com.ordermate.member.service.dto.MemberInfoDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.ordermate.member.exception.MemberExceptionType.DUPLICATE_USERNAME;
-import static com.ordermate.member.exception.MemberExceptionType.NOT_FOUND;
+import static com.ordermate.member.exception.MemberExceptionType.*;
 
 @Service
 @Transactional(readOnly = true)
@@ -37,6 +37,12 @@ public class MemberService {
             throw new MemberException(MemberExceptionType.PASSWORD_AUTHENTICATION_FAILED);
         }
         return member;
+    }
+
+    public MemberInfoDto findMemberInfo(String username) {
+        Member member = memberRepository.findByUsername(username).orElseThrow(() -> new MemberException(NOT_FOUND));
+
+        return new MemberInfoDto(member);
     }
 
     private void checkDuplicateUsername(String username) {
