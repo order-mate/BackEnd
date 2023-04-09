@@ -115,10 +115,11 @@ public class PostService {
     }
 
     @Transactional(readOnly = true)
-    public PostDetailDto getPost(Long postId) {
+    public PostDetailDto getPost(Long postId, Long memberId) {
         Post post = findPost(postId);
+        Member member = findMember(memberId);
 
-        return new PostDetailDto(post);
+        return new PostDetailDto(post, member);
     }
 
     @Transactional(readOnly = true)

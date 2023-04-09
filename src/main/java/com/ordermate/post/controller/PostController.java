@@ -50,8 +50,13 @@ public class PostController {
     }
 
     @GetMapping("/post/{postId}")
-    public ResponseEntity<?> getPost(@PathVariable("postId") Long postId) {
-        PostDetailDto post = postService.getPost(postId);
+    public ResponseEntity<?> getPost(
+            @PathVariable("postId") Long postId,
+            HttpServletRequest request
+    ) {
+        Member member= (Member) request.getSession().getAttribute(SessionConst.LOGIN_MEMBER);
+
+        PostDetailDto post = postService.getPost(postId, member.getId());
 
         return new ResponseEntity<>(post, HttpStatus.OK);
     }

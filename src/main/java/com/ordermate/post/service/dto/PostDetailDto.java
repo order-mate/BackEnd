@@ -14,6 +14,7 @@ import java.util.List;
 
 @Getter
 public class PostDetailDto {
+    private String loginUsername;
     private String ownerName;
     private String title;
     private LocalDateTime createdAt;
@@ -30,7 +31,8 @@ public class PostDetailDto {
     private List<PostDetailParticipationDto> participationList;
     private List<PostDetailCommentDto> commentList;
 
-    public PostDetailDto(Post post) {
+    public PostDetailDto(Post post, Member member) {
+        this.loginUsername = member.getUsername();
         this.title = post.getTitle();
         this.createdAt = post.getCreatedAt();
         this.postStatus = post.getPostStatus();
