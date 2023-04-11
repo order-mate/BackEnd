@@ -37,6 +37,10 @@ public class PostService {
         Member member = findMember(memberId);
         Post post = postSaveDto.toEntity(member);
 
+        if(!getAuthUploadPost(memberId).authority()) {
+            throw new PostException(PostExceptionType.NO_AUTHORITY_UPLOAD);
+        }
+
         postRepository.save(post);
     }
 
