@@ -15,10 +15,7 @@ import com.ordermate.post.domain.PostStatus;
 import com.ordermate.post.domain.SpaceType;
 import com.ordermate.post.exception.PostException;
 import com.ordermate.post.exception.PostExceptionType;
-import com.ordermate.post.service.dto.PostDetailDto;
-import com.ordermate.post.service.dto.PostDto;
-import com.ordermate.post.service.dto.PostSaveDto;
-import com.ordermate.post.service.dto.PostUpdateDto;
+import com.ordermate.post.service.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,7 +30,7 @@ public class PostService {
     private final PostRepository postRepository;
     private final MemberRepository memberRepository;
 
-    public PostDetailDto savePost(Long memberId, PostSaveDto postSaveDto) {
+    public PostSaveDetailDto savePost(Long memberId, PostSaveDto postSaveDto) {
         Member member = findMember(memberId);
         Post post = postSaveDto.toEntity(member);
 
@@ -41,9 +38,9 @@ public class PostService {
             throw new PostException(PostExceptionType.NO_AUTHORITY_UPLOAD);
         }
 
-        postRepository.save(post);
+        Post savedPost = postRepository.save(post);
 
-        return new PostDetailDto(post, member);
+        return new PostSaveDetailDto(savedPost, member);
     }
 
     public void addGuest(Long postId, Long memberId) {

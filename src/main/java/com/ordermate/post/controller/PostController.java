@@ -7,10 +7,7 @@ import com.ordermate.post.controller.dto.*;
 import com.ordermate.post.domain.PostStatus;
 import com.ordermate.post.domain.SpaceType;
 import com.ordermate.post.service.PostService;
-import com.ordermate.post.service.dto.PostDetailDto;
-import com.ordermate.post.service.dto.PostDto;
-import com.ordermate.post.service.dto.PostSaveDto;
-import com.ordermate.post.service.dto.PostStatusDto;
+import com.ordermate.post.service.dto.*;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,7 +32,7 @@ public class PostController {
         Member member= (Member) request.getSession().getAttribute(SessionConst.LOGIN_MEMBER);
 
         PostSaveDto postSaveDto = uploadRequestDto.toServiceDto();
-        PostDetailDto postDetailDto = postService.savePost(member.getId(), postSaveDto);
+        PostSaveDetailDto postDetailDto = postService.savePost(member.getId(), postSaveDto);
 
         return new ResponseEntity<>(postDetailDto, HttpStatus.CREATED);
     }
