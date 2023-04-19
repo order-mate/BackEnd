@@ -35,9 +35,9 @@ public class PostController {
         Member member= (Member) request.getSession().getAttribute(SessionConst.LOGIN_MEMBER);
 
         PostSaveDto postSaveDto = uploadRequestDto.toServiceDto();
-        postService.savePost(member.getId(), postSaveDto);
+        PostDetailDto postDetailDto = postService.savePost(member.getId(), postSaveDto);
 
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        return new ResponseEntity<>(postDetailDto, HttpStatus.CREATED);
     }
 
     @GetMapping("/post")

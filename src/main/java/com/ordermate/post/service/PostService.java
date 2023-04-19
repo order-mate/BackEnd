@@ -33,7 +33,7 @@ public class PostService {
     private final PostRepository postRepository;
     private final MemberRepository memberRepository;
 
-    public void savePost(Long memberId, PostSaveDto postSaveDto) {
+    public PostDetailDto savePost(Long memberId, PostSaveDto postSaveDto) {
         Member member = findMember(memberId);
         Post post = postSaveDto.toEntity(member);
 
@@ -42,6 +42,8 @@ public class PostService {
         }
 
         postRepository.save(post);
+
+        return new PostDetailDto(post, member);
     }
 
     public void addGuest(Long postId, Long memberId) {
