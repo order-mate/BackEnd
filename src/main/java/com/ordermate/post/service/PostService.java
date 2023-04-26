@@ -8,6 +8,7 @@ import com.ordermate.member.exception.MemberExceptionType;
 import com.ordermate.participant.domain.Participation;
 import com.ordermate.participant.domain.Role;
 import com.ordermate.post.controller.dto.DirectionType;
+import com.ordermate.post.controller.dto.UploadPostAuthorityDto;
 import com.ordermate.post.domain.Post;
 import com.ordermate.post.domain.PostRepository;
 import com.ordermate.post.domain.PostStatus;
@@ -29,11 +30,17 @@ public class PostService {
     private final PostRepository postRepository;
     private final MemberRepository memberRepository;
 
-    public void savePost(Long memberId, PostSaveDto postSaveDto) {
+    public PostSaveDetailDto savePost(Long memberId, PostSaveDto postSaveDto) {
         Member member = findMember(memberId);
         Post post = postSaveDto.toEntity(member);
 
-        postRepository.save(post);
+        if(!getAuthUploadPost(memberId).authority()) {
+            throw new PostException(PostExceptionType.NO_AUTHORITY_UPLOAD);
+        }
+
+        Post savedPost = postRepository.save(post);
+
+        return new PostSaveDetailDto(savedPost, member);
     }
 
     public void addGuest(Long postId, Long memberId) {
@@ -47,9 +54,10 @@ public class PostService {
         Member member = findMember(memberId);
         Post post = findPost(postId);
 
-        if (getRole(member, post).equals(Role.HOST)) {
+        Role role = getRole(member, post);
+        if (role.equals(Role.HOST)) {
             postRepository.delete(post);
-        } else {
+        } else if(role.equals(Role.GUEST)){
             post.leaveGuest(member);
         }
     }
@@ -72,6 +80,7 @@ public class PostService {
         post.explode(member);
     }
 
+    @Transactional(readOnly = true)
     public PostStatus getPostStatus(Long postId) {
         Post post = findPost(postId);
         return post.getPostStatus();
@@ -91,10 +100,11 @@ public class PostService {
         post.update(postUpdateDto, member);
     }
 
-    public Role getRole(Member member, Post post) {
+    private Role getRole(Member member, Post post) {
         return post.getParticipationMemberRole(member);
     }
 
+    @Transactional(readOnly = true)
     public List<PostDto> getAllFilteredPost(SpaceType spaceType, GenderType genderType) {
         return postRepository.findAll().stream()
                 .filter(p -> spaceType == SpaceType.ALL || p.getSpaceType().equals(spaceType))
@@ -107,12 +117,15 @@ public class PostService {
                 .toList();
     }
 
-    public PostDetailDto getPost(Long postId) {
+    @Transactional(readOnly = true)
+    public PostDetailDto getPost(Long postId, Long memberId) {
         Post post = findPost(postId);
+        Member member = findMember(memberId);
 
-        return new PostDetailDto(post);
+        return new PostDetailDto(post, member);
     }
 
+    @Transactional(readOnly = true)
     public List<PostDto> getAllParticipatedPost(Long memberId) {
         return postRepository.findAllByMemberId(memberId)
                 .stream().map(PostDto::new).toList();
@@ -127,5 +140,13 @@ public class PostService {
 
     private Post findPost(Long postId) {
         return postRepository.findById(postId).orElseThrow(() -> new PostException(PostExceptionType.NOT_FOUND));
+    }
+
+    @Transactional(readOnly = true)
+    public UploadPostAuthorityDto getAuthUploadPost(Long memberId) {
+        List<PostDto> allParticipatedPost = getAllParticipatedPost(memberId);
+        return new UploadPostAuthorityDto(allParticipatedPost.stream()
+                .filter(p -> !p.getPostStatus().equals(PostStatus.END_OF_ROOM))
+                .findAny().isEmpty());
     }
 }

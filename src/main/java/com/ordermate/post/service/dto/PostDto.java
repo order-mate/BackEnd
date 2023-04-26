@@ -46,7 +46,7 @@ public class PostDto
         this.estimatedOrderTime = post.getEstimatedOrderTime();
         Member owner = post.getParticipationList().stream()
                 .filter(participation -> participation.getRole().equals(Role.HOST)).findAny()
-                .orElseThrow(() -> new ParticipationException(ParticipationExceptionType.NOT_FOUND)).getMember();
+                .orElseThrow(() -> new ParticipationException(ParticipationExceptionType.HOST_NOT_FOUND)).getMember();
         this.ownerName = isAnonymous ? owner.getNickname() : owner.getName();
         this.ownerId = owner.getId();
     }

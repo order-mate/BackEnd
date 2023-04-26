@@ -3,17 +3,11 @@ package com.ordermate.post.controller;
 import com.ordermate.SessionConst;
 import com.ordermate.member.domain.GenderType;
 import com.ordermate.member.domain.Member;
-import com.ordermate.post.controller.dto.ChangeStatusRequestDto;
-import com.ordermate.post.controller.dto.DirectionType;
-import com.ordermate.post.controller.dto.UpdateRequestDto;
-import com.ordermate.post.controller.dto.UploadRequestDto;
+import com.ordermate.post.controller.dto.*;
 import com.ordermate.post.domain.PostStatus;
 import com.ordermate.post.domain.SpaceType;
 import com.ordermate.post.service.PostService;
-import com.ordermate.post.service.dto.PostDetailDto;
-import com.ordermate.post.service.dto.PostDto;
-import com.ordermate.post.service.dto.PostSaveDto;
-import com.ordermate.post.service.dto.PostStatusDto;
+import com.ordermate.post.service.dto.*;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -38,9 +32,9 @@ public class PostController {
         Member member= (Member) request.getSession().getAttribute(SessionConst.LOGIN_MEMBER);
 
         PostSaveDto postSaveDto = uploadRequestDto.toServiceDto();
-        postService.savePost(member.getId(), postSaveDto);
+        PostSaveDetailDto postDetailDto = postService.savePost(member.getId(), postSaveDto);
 
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        return new ResponseEntity<>(postDetailDto, HttpStatus.CREATED);
     }
 
     @GetMapping("/post")
@@ -53,8 +47,13 @@ public class PostController {
     }
 
     @GetMapping("/post/{postId}")
-    public ResponseEntity<?> getPost(@PathVariable("postId") Long postId) {
-        PostDetailDto post = postService.getPost(postId);
+    public ResponseEntity<?> getPost(
+            @PathVariable("postId") Long postId,
+            HttpServletRequest request
+    ) {
+        Member member= (Member) request.getSession().getAttribute(SessionConst.LOGIN_MEMBER);
+
+        PostDetailDto post = postService.getPost(postId, member.getId());
 
         return new ResponseEntity<>(post, HttpStatus.OK);
     }
@@ -65,7 +64,7 @@ public class PostController {
             @RequestBody UpdateRequestDto updateRequestDto,
             HttpServletRequest request
     ) {
-        Member member= (Member) request.getSession().getAttribute(SessionConst.LOGIN_MEMBER);
+        Member member = (Member) request.getSession().getAttribute(SessionConst.LOGIN_MEMBER);
         postService.updatePost(postId, member.getId(), updateRequestDto.toServiceDto());
 
         return new ResponseEntity<>(HttpStatus.CREATED);
@@ -97,6 +96,38 @@ public class PostController {
         PostStatus postStatus = postService.getPostStatus(postId);
 
         return new ResponseEntity<>(new PostStatusDto(postStatus) ,HttpStatus.CREATED);
+    }
+
+    @GetMapping("/post/auth")
+    public ResponseEntity<?> getAuthUploadPost(
+            HttpServletRequest request
+    ) {
+        Member member= (Member) request.getSession().getAttribute(SessionConst.LOGIN_MEMBER);
+        UploadPostAuthorityDto authUploadPost = postService.getAuthUploadPost(member.getId());
+
+        return new ResponseEntity<>(authUploadPost, HttpStatus.OK);
+    }
+
+    @PostMapping("/post/{postId}/enter")
+    public ResponseEntity<?> enterPost(
+            @PathVariable Long postId,
+            HttpServletRequest request
+    ) {
+        Member member= (Member) request.getSession().getAttribute(SessionConst.LOGIN_MEMBER);
+        postService.addGuest(postId, member.getId());
+
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @PostMapping("/post/{postId}/leave")
+    public ResponseEntity<?> leavePost(
+            @PathVariable Long postId,
+            HttpServletRequest request
+    ) {
+        Member member= (Member) request.getSession().getAttribute(SessionConst.LOGIN_MEMBER);
+        postService.leavePost(postId, member.getId());
+
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 }
 

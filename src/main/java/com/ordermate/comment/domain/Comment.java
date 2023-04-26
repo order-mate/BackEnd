@@ -10,6 +10,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -30,6 +31,7 @@ public class Comment {
     @JoinColumn(name = "member_id")
     private Member member;
 
+    @CreationTimestamp
     private LocalDateTime createdAt;
 
     private String content;

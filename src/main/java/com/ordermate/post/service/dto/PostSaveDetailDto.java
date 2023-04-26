@@ -13,7 +13,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
-public class PostDetailDto {
+public class PostSaveDetailDto {
+    private Long postId;
     private String loginUsername;
     private String ownerName;
     private String title;
@@ -29,9 +30,9 @@ public class PostDetailDto {
     private String accountNum;
     private LocalDateTime estimatedOrderTime;
     private List<PostDetailParticipationDto> participationList;
-    private List<PostDetailCommentDto> commentList;
 
-    public PostDetailDto(Post post, Member member) {
+    public PostSaveDetailDto(Post post, Member member) {
+        this.postId = post.getId();
         this.loginUsername = member.getUsername();
         this.title = post.getTitle();
         this.createdAt = post.getCreatedAt();
@@ -48,9 +49,6 @@ public class PostDetailDto {
 
         this.participationList = post.getParticipationList().stream()
                 .map(p -> new PostDetailParticipationDto(p.getRole(), p.getMember(), isAnonymous)).toList();
-
-        this.commentList = post.getCommentList().stream()
-                .map(c -> new PostDetailCommentDto(c.getContent(), c.getCreatedAt(), c.getMember(), isAnonymous)).toList();
 
         Member owner = post.getParticipationList().stream()
                 .filter(participation -> participation.getRole().equals(Role.HOST)).findAny()

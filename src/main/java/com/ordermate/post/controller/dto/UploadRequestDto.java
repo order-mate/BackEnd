@@ -1,5 +1,6 @@
 package com.ordermate.post.controller.dto;
 
+import com.ordermate.post.domain.PostStatus;
 import com.ordermate.post.domain.SpaceType;
 import com.ordermate.post.service.dto.PostSaveDto;
 
@@ -14,13 +15,14 @@ public record UploadRequestDto(
         String withOrderLink,
         String pickupSpace,
         String accountNum,
-        LocalDateTime estimatedOrderTime
+        LocalDateTime estimatedOrderTime,
+        PostStatus postStatus
 ) {
 
     public PostSaveDto toServiceDto() {
         return PostSaveDto.builder().title(title).maxPeopleNum(maxPeopleNum)
                 .isAnonymous(isAnonymous).spaceType(spaceType).content(content)
                 .withOrderLink(withOrderLink).pickupSpace(pickupSpace)
-                .accountNum(accountNum).estimatedOrderTime(estimatedOrderTime).build();
+                .accountNum(accountNum).estimatedOrderTime(estimatedOrderTime).postStatus(PostStatus.RECRUITING).build();
     }
 }
